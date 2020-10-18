@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { TaskRepositoryQuery } from '@query/task/task-repository.query';
+import { TaskStoreQuery } from '@query/task/task-store.query';
 import { LoadTaskUsecase } from '@usecase/task/load-task.usecase';
 
 @Component({
@@ -11,7 +11,7 @@ export class ProjectPageComponent implements OnInit {
   readonly task$ = this.taskStateQuery.task$;
 
   constructor(
-    private taskStateQuery: TaskRepositoryQuery,
+    private taskStateQuery: TaskStoreQuery,
     private loadTaskUsecase: LoadTaskUsecase
   ) {}
 

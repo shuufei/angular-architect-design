@@ -5,34 +5,32 @@ import { SchedulePageRoutingModule } from './schedule-page-routing.module';
 import { TaskCardModule } from '@view/component/presentation/task-card/task-card.module';
 import { TaskApiClientService } from '@infrastructure/api/task/task-api-client.service';
 import { TaskStore } from '@infrastructure/store/task.store';
-import { TaskRepository } from '@query/task/task-repository';
-import { TaskRepositoryQuery } from '@query/task/task-repository.query';
+import { TaskStoreQuery } from '@query/task/task-store.query';
 import { LoadTaskUsecase } from '@usecase/task/load-task.usecase';
-import { TaskApiRepository } from '@usecase/task/task-api-repository';
 import { CommonModule } from '@angular/common';
 import { TaskApiClientModule } from '@infrastructure/api/task/task-api-client.module';
+import { ApiClientService } from '@infrastructure/api/api-client.service';
 
 const taskStore = new TaskStore();
 
-const loadTaskUsecaseProviders = [
-  LoadTaskUsecase,
-  {
-    provide: TaskRepository,
-    useValue: taskStore,
-  },
-  {
-    provide: TaskApiRepository,
-    useClass: TaskApiClientService,
-  },
-];
+// const loadTaskUsecaseProviders = [
+//   LoadTaskUsecase,
+//   {
+//     provide: TaskRepository,
+//     useValue: taskStore,
+//   },
+//   {
+//     provide: TaskApiRepository,
+//     useClass: TaskApiClientService,
+//   },
+// ];
+// const TaskStoreQueryProviders = [TaskStoreQuery];
 
-const taskRepositoryQueryProviders = [
-  TaskRepositoryQuery,
-  {
-    provide: TaskRepository,
-    useValue: taskStore,
-  },
-];
+// 下記のnewする記法じゃないと、usecaseにinjectされるrepositoryがTaskRepositoryをimplementsしたものであるという制約をはれない
+const loadTaskUsecase = new LoadTaskUsecase(
+  new TaskApiClientService(new ApiClientService()),
+  taskStore
+);
 
 @NgModule({
   declarations: [SchedulePageComponent],
@@ -44,8 +42,11 @@ const taskRepositoryQueryProviders = [
     TaskApiClientModule,
   ],
   providers: [
-    ...loadTaskUsecaseProviders,
-    ...taskRepositoryQueryProviders,
+    TaskStoreQuery,
+    {
+      provide: LoadTaskUsecase,
+      useValue: loadTaskUsecase,
+    },
     {
       provide: TaskStore,
       useValue: taskStore,

@@ -17,6 +17,13 @@ const routes: Routes = [
       ),
   },
   {
+    path: 'mypage',
+    loadChildren: () =>
+      import('@view/page/my-tasks-page/my-tasks-page.module').then(
+        (m) => m.MyTasksPageModule
+      ),
+  },
+  {
     path: '**',
     redirectTo: '/project',
   },

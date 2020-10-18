@@ -1,40 +1,37 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-
-import { ProjectPageComponent } from './project-page.component';
-import { ProjectPageRoutingModule } from './project-page-routing.module';
+import { MyTasksPageComponent } from './my-tasks-page.component';
+import { MyTasksPageRoutingModule } from './my-tasks-page-routing.module';
+import { MyPageStore } from '@infrastructure/store/my-page.store';
+import { MyPageStoreQuery } from '@query/mypage/mypage-store.query';
 import { TaskCardModule } from '@view/component/presentation/task-card/task-card.module';
-import { TaskStore } from '@infrastructure/store/task.store';
 import { LoadTaskUsecase } from '@usecase/task/load-task.usecase';
-import { TaskApiClientModule } from '@infrastructure/api/task/task-api-client.module';
 import { TaskRepository } from '@usecase/task/task-repository';
-import { TaskApiRepository } from '@usecase/task/task-api-repository';
 import { TaskApiClientService } from '@infrastructure/api/task/task-api-client.service';
-import { TaskStoreQuery } from '@query/task/task-store.query';
+import { TaskApiRepository } from '@usecase/task/task-api-repository';
 import { ApiClientService } from '@infrastructure/api/api-client.service';
 
-const taskStore = new TaskStore();
+const store = new MyPageStore();
 
 // 下記のnewする記法じゃないと、usecaseにinjectされるrepositoryがTaskRepositoryをimplementsしたものであるという制約をはれない
 const loadTaskUsecase = new LoadTaskUsecase(
   new TaskApiClientService(new ApiClientService()),
-  taskStore
+  store
 );
 
 @NgModule({
-  declarations: [ProjectPageComponent],
-  exports: [ProjectPageComponent],
-  imports: [CommonModule, ProjectPageRoutingModule, TaskCardModule],
+  declarations: [MyTasksPageComponent],
+  imports: [CommonModule, MyTasksPageRoutingModule, TaskCardModule],
   providers: [
-    TaskStoreQuery,
+    MyPageStoreQuery,
     {
       provide: LoadTaskUsecase,
       useValue: loadTaskUsecase,
     },
     {
-      provide: TaskStore,
-      useValue: taskStore,
+      provide: MyPageStore,
+      useValue: store,
     },
   ],
 })
-export class ProjectPageModule {}
+export class MyTasksPageModule {}
