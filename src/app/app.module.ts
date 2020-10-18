@@ -3,13 +3,17 @@ import { NgModule } from '@angular/core';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { TaskCardComponent } from './component/presentation/task-card/task-card.component';
-import { ProjectPageComponent } from './page/project-page/project-page.component';
-import { SchedulePageComponent } from './page/schedule-page/schedule-page.component';
+import { SchedulePageModule } from './view/page/schedule-page/schedule-page.module';
+import { ProjectPageModule } from './view/page/project-page/project-page.module';
 
 @NgModule({
-  declarations: [AppComponent, TaskCardComponent, ProjectPageComponent, SchedulePageComponent],
-  imports: [BrowserModule, AppRoutingModule],
+  declarations: [AppComponent],
+  imports: [
+    BrowserModule,
+    AppRoutingModule,
+    SchedulePageModule,
+    ProjectPageModule,
+  ],
   providers: [],
   bootstrap: [AppComponent],
 })

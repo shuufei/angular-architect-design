@@ -1,16 +1,20 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import { ProjectPageComponent } from './page/project-page/project-page.component';
-import { SchedulePageComponent } from './page/schedule-page/schedule-page.component';
 
 const routes: Routes = [
   {
     path: 'project',
-    component: ProjectPageComponent,
+    loadChildren: () =>
+      import('@view/page/project-page/project-page.module').then(
+        (m) => m.ProjectPageModule
+      ),
   },
   {
     path: 'schedule',
-    component: SchedulePageComponent,
+    loadChildren: () =>
+      import('@view/page/schedule-page/schedule-page.module').then(
+        (m) => m.SchedulePageModule
+      ),
   },
   {
     path: '**',

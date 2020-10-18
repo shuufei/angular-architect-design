@@ -1,0 +1,9 @@
+<h1>schedule-page works!</h1>
+
+<ng-container *ngIf="task$ | async as task">
+  <app-task-card
+    [title]="task.title"
+    [description]="task.description"
+    [assignUserName]="task.assign.name"
+  ></app-task-card>
+</ng-container>
