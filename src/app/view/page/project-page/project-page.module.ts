@@ -30,6 +30,8 @@ const loadTaskUsecaseForRxAngular = new LoadTaskUsecaseForRxAngular(
   taskStoreForRxAngular
 );
 
+const taskQuery = new TaskStoreQueryForRxAngular(taskStoreForRxAngular);
+
 @NgModule({
   declarations: [ProjectPageComponent],
   exports: [ProjectPageComponent],
@@ -44,7 +46,7 @@ const loadTaskUsecaseForRxAngular = new LoadTaskUsecaseForRxAngular(
     //   provide: TaskStore,
     //   useValue: taskStore,
     // },
-    TaskStoreQueryForRxAngular,
+    { provide: TaskStoreQueryForRxAngular, useValue: taskQuery },
     {
       provide: LoadTaskUsecaseForRxAngular,
       useValue: loadTaskUsecaseForRxAngular,

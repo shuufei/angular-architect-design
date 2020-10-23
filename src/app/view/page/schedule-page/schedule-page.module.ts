@@ -45,15 +45,12 @@ const loadTaskUsecaseForRxAngular = new LoadTaskUsecaseForRxAngular(
   taskStoreForRxAngular
 );
 
+const taskQuery = new TaskStoreQueryForRxAngular(taskStoreForRxAngular);
+
 @NgModule({
   declarations: [SchedulePageComponent],
   exports: [SchedulePageComponent],
-  imports: [
-    CommonModule,
-    SchedulePageRoutingModule,
-    TaskCardModule,
-    TaskApiClientModule,
-  ],
+  imports: [CommonModule, SchedulePageRoutingModule, TaskCardModule],
   providers: [
     // TaskStoreQuery,
     // {
@@ -64,7 +61,7 @@ const loadTaskUsecaseForRxAngular = new LoadTaskUsecaseForRxAngular(
     //   provide: TaskStore,
     //   useValue: taskStore,
     // },
-    TaskStoreQueryForRxAngular,
+    { provide: TaskStoreQueryForRxAngular, useValue: taskQuery },
     {
       provide: LoadTaskUsecaseForRxAngular,
       useValue: loadTaskUsecaseForRxAngular,
