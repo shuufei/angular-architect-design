@@ -15,7 +15,7 @@ import { pluck } from 'rxjs/operators';
   styleUrls: ['./schedule-page.component.scss'],
 })
 export class SchedulePageComponent implements OnInit {
-  readonly task$ = this.taskStateQuery.state$.pipe(pluck('task'));
+  readonly task$ = this.taskStateQuery.select('task');
 
   constructor(
     // private taskStateQuery: TaskStoreQuery,

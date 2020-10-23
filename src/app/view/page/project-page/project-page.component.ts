@@ -11,7 +11,7 @@ import { LoadTaskUsecaseForRxAngular } from '../../../usecase/task/load-task.use
   styleUrls: ['./project-page.component.scss'],
 })
 export class ProjectPageComponent implements OnInit {
-  readonly task$ = this.taskStateQuery.state$.pipe(pluck('task'));
+  readonly task$ = this.taskStateQuery.select('task');
 
   constructor(
     // private taskStateQuery: TaskStoreQuery,

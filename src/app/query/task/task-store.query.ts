@@ -12,10 +12,9 @@ export class TaskStoreQuery {
 }
 
 class StoreQuery<T extends {}> {
-  readonly state$ = this.store.select();
-  get state(): T {
-    return this.store.get();
-  }
+  // ComponentをStoreに依存させないようにするなら、selectとgetを公開しない方がいいかもしれない
+  readonly select = this.store.select.bind(this.store);
+  readonly get = this.store.get.bind(this.store);
   constructor(private store: RxState<T>) {}
 }
 
