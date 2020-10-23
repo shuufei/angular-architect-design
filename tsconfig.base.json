@@ -23,7 +23,8 @@
       "@infrastructure/*": ["./src/app/infrastructure/*"],
       "@usecase/*": ["./src/app/usecase/*"],
       "@query/*": ["./src/app/query/*"]
-    }
+    },
+    "allowSyntheticDefaultImports": true
   },
   "angularCompilerOptions": {
     "strictInjectionParameters": true,

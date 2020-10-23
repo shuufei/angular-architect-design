@@ -12,8 +12,12 @@ import { TaskApiRepository } from '@usecase/task/task-api-repository';
 import { TaskApiClientService } from '@infrastructure/api/task/task-api-client.service';
 import { TaskStoreQuery } from '@query/task/task-store.query';
 import { ApiClientService } from '@infrastructure/api/api-client.service';
+import { TaskStore as TaskStoreForRxAngular } from '@infrastructure/store_rx-angular/task.store';
+import { LoadTaskUsecaseForRxAngular } from '@usecase/task/load-task.usecase';
+import { TaskStoreQueryForRxAngular } from '@query/task/task-store.query';
 
 const taskStore = new TaskStore();
+const taskStoreForRxAngular = new TaskStoreForRxAngular();
 
 // 下記のnewする記法じゃないと、usecaseにinjectされるrepositoryがTaskRepositoryをimplementsしたものであるという制約をはれない
 const loadTaskUsecase = new LoadTaskUsecase(
@@ -21,19 +25,33 @@ const loadTaskUsecase = new LoadTaskUsecase(
   taskStore
 );
 
+const loadTaskUsecaseForRxAngular = new LoadTaskUsecaseForRxAngular(
+  new TaskApiClientService(new ApiClientService()),
+  taskStoreForRxAngular
+);
+
 @NgModule({
   declarations: [ProjectPageComponent],
   exports: [ProjectPageComponent],
   imports: [CommonModule, ProjectPageRoutingModule, TaskCardModule],
   providers: [
-    TaskStoreQuery,
+    // TaskStoreQuery,
+    // {
+    //   provide: LoadTaskUsecase,
+    //   useValue: loadTaskUsecase,
+    // },
+    // {
+    //   provide: TaskStore,
+    //   useValue: taskStore,
+    // },
+    TaskStoreQueryForRxAngular,
     {
-      provide: LoadTaskUsecase,
-      useValue: loadTaskUsecase,
+      provide: LoadTaskUsecaseForRxAngular,
+      useValue: loadTaskUsecaseForRxAngular,
     },
     {
-      provide: TaskStore,
-      useValue: taskStore,
+      provide: TaskStoreForRxAngular,
+      useValue: taskStoreForRxAngular,
     },
   ],
 })

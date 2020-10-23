@@ -5,13 +5,21 @@ import { SchedulePageRoutingModule } from './schedule-page-routing.module';
 import { TaskCardModule } from '@view/component/presentation/task-card/task-card.module';
 import { TaskApiClientService } from '@infrastructure/api/task/task-api-client.service';
 import { TaskStore } from '@infrastructure/store/task.store';
-import { TaskStoreQuery } from '@query/task/task-store.query';
-import { LoadTaskUsecase } from '@usecase/task/load-task.usecase';
+import {
+  TaskStoreQuery,
+  TaskStoreQueryForRxAngular,
+} from '@query/task/task-store.query';
+import {
+  LoadTaskUsecase,
+  LoadTaskUsecaseForRxAngular,
+} from '@usecase/task/load-task.usecase';
 import { CommonModule } from '@angular/common';
 import { TaskApiClientModule } from '@infrastructure/api/task/task-api-client.module';
 import { ApiClientService } from '@infrastructure/api/api-client.service';
+import { TaskStore as TaskStoreForRxAngular } from '@infrastructure/store_rx-angular/task.store';
 
 const taskStore = new TaskStore();
+const taskStoreForRxAngular = new TaskStoreForRxAngular();
 
 // const loadTaskUsecaseProviders = [
 //   LoadTaskUsecase,
@@ -32,6 +40,11 @@ const loadTaskUsecase = new LoadTaskUsecase(
   taskStore
 );
 
+const loadTaskUsecaseForRxAngular = new LoadTaskUsecaseForRxAngular(
+  new TaskApiClientService(new ApiClientService()),
+  taskStoreForRxAngular
+);
+
 @NgModule({
   declarations: [SchedulePageComponent],
   exports: [SchedulePageComponent],
@@ -42,14 +55,23 @@ const loadTaskUsecase = new LoadTaskUsecase(
     TaskApiClientModule,
   ],
   providers: [
-    TaskStoreQuery,
+    // TaskStoreQuery,
+    // {
+    //   provide: LoadTaskUsecase,
+    //   useValue: loadTaskUsecase,
+    // },
+    // {
+    //   provide: TaskStore,
+    //   useValue: taskStore,
+    // },
+    TaskStoreQueryForRxAngular,
     {
-      provide: LoadTaskUsecase,
-      useValue: loadTaskUsecase,
+      provide: LoadTaskUsecaseForRxAngular,
+      useValue: loadTaskUsecaseForRxAngular,
     },
     {
-      provide: TaskStore,
-      useValue: taskStore,
+      provide: TaskStoreForRxAngular,
+      useValue: taskStoreForRxAngular,
     },
   ],
 })
