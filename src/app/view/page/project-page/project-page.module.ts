@@ -10,11 +10,24 @@ import { TaskApiClientModule } from '@infrastructure/api/task/task-api-client.mo
 import { TaskRepository } from '@usecase/task/task-repository';
 import { TaskApiRepository } from '@usecase/task/task-api-repository';
 import { TaskApiClientService } from '@infrastructure/api/task/task-api-client.service';
-import { TaskStoreQuery } from '@query/task/task-store.query';
+import {
+  TaskStoreQuery,
+  TaskStoreQueryForNgrx,
+  TASK_SELECTOR,
+} from '@query/task/task-store.query';
 import { ApiClientService } from '@infrastructure/api/api-client.service';
 import { TaskStore as TaskStoreForRxAngular } from '@infrastructure/store_rx-angular/task.store';
 import { LoadTaskUsecaseForRxAngular } from '@usecase/task/load-task.usecase';
 import { TaskStoreQueryForRxAngular } from '@query/task/task-store.query';
+import { LoadTaskUsecaseForNgrx } from '@usecase/task/load-task.usecase';
+import { loadTaskSuccess } from '@infrastructure/store_ngrx/project-page-store/actions';
+import { StoreModule } from '@ngrx/store';
+import { LOAD_TASK_ACTION } from '../../../usecase/task/load-task.usecase';
+import {
+  featureKey,
+  reducer,
+} from '@infrastructure/store_ngrx/project-page-store/reducer';
+import { selectTask } from '@infrastructure/store_ngrx/project-page-store/selectors';
 
 const taskStore = new TaskStore();
 const taskStoreForRxAngular = new TaskStoreForRxAngular();
@@ -35,7 +48,13 @@ const taskQuery = new TaskStoreQueryForRxAngular(taskStoreForRxAngular);
 @NgModule({
   declarations: [ProjectPageComponent],
   exports: [ProjectPageComponent],
-  imports: [CommonModule, ProjectPageRoutingModule, TaskCardModule],
+  imports: [
+    CommonModule,
+    ProjectPageRoutingModule,
+    TaskCardModule,
+    TaskApiClientModule,
+    StoreModule.forFeature(featureKey, reducer),
+  ],
   providers: [
     // TaskStoreQuery,
     // {
@@ -46,15 +65,29 @@ const taskQuery = new TaskStoreQueryForRxAngular(taskStoreForRxAngular);
     //   provide: TaskStore,
     //   useValue: taskStore,
     // },
-    { provide: TaskStoreQueryForRxAngular, useValue: taskQuery },
+    // { provide: TaskStoreQueryForRxAngular, useValue: taskQuery },
+    // {
+    //   provide: LoadTaskUsecaseForRxAngular,
+    //   useValue: loadTaskUsecaseForRxAngular,
+    // },
+    // {
+    //   provide: TaskStoreForRxAngular,
+    //   useValue: taskStoreForRxAngular,
+    // },
     {
-      provide: LoadTaskUsecaseForRxAngular,
-      useValue: loadTaskUsecaseForRxAngular,
+      provide: TaskApiRepository,
+      useClass: TaskApiClientService,
+    },
+    LoadTaskUsecaseForNgrx,
+    {
+      provide: LOAD_TASK_ACTION,
+      useValue: loadTaskSuccess,
     },
     {
-      provide: TaskStoreForRxAngular,
-      useValue: taskStoreForRxAngular,
+      provide: TASK_SELECTOR,
+      useValue: selectTask,
     },
+    TaskStoreQueryForNgrx,
   ],
 })
 export class ProjectPageModule {}
